@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tom's Fit | Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg1: #05081f;
+            --bg2: #0a0f3d;
+            --neon: #7c5cff;
+            --neon2: #00f0ff;
+            --glass: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.15);
+            --text: #e8ebff;
+            --muted: #aab0ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top, var(--bg2), var(--bg1));
+            font-family: Inter, sans-serif;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--neon);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-logout {
+            padding: 8px 20px;
+            border: 1px solid var(--neon);
+            background: transparent;
+            color: var(--neon);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .btn-logout:hover {
+            background: var(--neon);
+            color: white;
+        }
+
+        .container {
+            padding: 60px 40px;
+        }
+
+        .welcome-box {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: Orbitron, sans-serif;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: var(--muted);
+            margin-bottom: 30px;
+        }
+
+    /* INPUTS */
+    .field {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 14px 14px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: white;
+      outline: none;
+    }
+
+    .field label {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+      transition: .3s;
+      font-size: 14px;
+    }
+
+    .field input:focus+label,
+    .field input:not(:placeholder-shown)+label {
+      top: -8px;
+      background: #0a0f3d;
+      padding: 0 6px;
+      font-size: 12px;
+      color: var(--neon2);
+    }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">💪 Tom's Fit</div>
+        <div class="user-info">
+            <span id="userName">Loading...</span>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="container" style="display:flex; flex-wrap:wrap; gap:30px; max-width:1200px; margin:0 auto;">
+
+        <div style="flex:2; min-width:300px;">
+            <div class="welcome-box" style="margin:0; text-align:left;">
+                <h1>Welcome Back, <span id="display-name">...</span>!</h1>
+                <p>Track your fitness journey here.</p>
+
+                <h2 style="font-family:Orbitron, sans-serif; margin-bottom:20px; color:var(--neon2);">Workout Log</h2>
+
+                <form class="field" id="workoutForm"
+                    style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:15px; margin-bottom:30px;">
+                    <input type="date" id="date" class="bg-input" required>
+                    <input type="text" id="exercise" placeholder="Exercise Name" class="bg-input" required>
+                    <input type="number" id="sets" placeholder="Sets" class="bg-input" required>
+                    <input type="number" id="reps" placeholder="Reps" class="bg-input" required>
+                    <input type="number" id="weight" placeholder="Weight (kg)" class="bg-input" step="0.5" required>
+                    <button type="submit" class="btn-logout"
+                        style="background:var(--neon); color:black; border:none; font-weight:700;">+ Add</button>
+                </form>
+
+                <table style="width:100%; border-collapse:collapse; color:var(--text);">
+                    <thead>
+                        <tr style="border-bottom:1px solid var(--border); text-align:left; color:var(--muted);">
+                            <th style="padding:10px;">Date</th>
+                            <th style="padding:10px;">Exercise</th>
+                            <th style="padding:10px;">Sets</th>
+                            <th style="padding:10px;">Reps</th>
+                            <th style="padding:10px;">Weight</th>
+                            <th style="padding:10px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="workoutList">
+                        <!-- JS will populate this -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="flex:1; min-width:280px;">
+            <div class="welcome-box" style="margin:0; text-align:center;">
+                <h3 style="margin-bottom:20px; color:var(--neon);">My Profile</h3>
+
+                <div
+                    style="width:100px; height:100px; margin:0 auto 20px; border-radius:50%; overflow:hidden; border:2px solid var(--neon2); position:relative; background:#000;">
+                    <img id="userPhoto" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+                    <div id="defaultPhoto"
+                        style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:40px;">
+                        👤</div>
+                </div>
+
+                <div id="userNameSidebar" style="font-weight:700; font-size:18px; margin-bottom:5px;">Loading...</div>
+                <div id="userAgeSidebar" style="color:var(--muted); font-size:14px; margin-bottom:20px;">Age: --</div>
+
+                <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
+
+                <h4 style="margin-bottom:15px;">Update Profile</h4>
+                <form id="profileForm" style="text-align:left;">
+                    <div class="field" style="margin-bottom:15px;">
+                        <label style="display:block; font-size:12px; color:var(--muted); margin-bottom:5px;">Age</label>
+                        <input type="number" id="editAge" class="bg-input" style="width:100%;">
+                    </div>
+
+                    <div class="field" style="margin-bottom:15px;">
+                        <label style="display:block; font-size:12px; color:var(--muted); margin-bottom:5px;">Profile
+                            Photo</label>
+                        <input type="file" id="editPhoto" accept="image/*" style="font-size:12px;">
+                    </div>
+
+                    <button type="submit" class="btn-logout"
+                        style="width:100%; background:var(--neon2); color:black; border:none; font-weight:700;">Save
+                        Changes</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        async function checkSession() {
+            try {
+                const res = await fetch("check_session.php");
+                const data = await res.json();
+
+                if (!data.loggedIn) {
+                    window.location.href = "login.html";
+                } else {
+                    const u = data.user;
+
+                    // HEADER INFO
+                    document.getElementById("userName").textContent = u.name;
+
+                    // MAIN BOX
+                    document.getElementById("display-name").textContent = u.name;
+
+                    // SIDEBAR INFO
+                    document.getElementById("userNameSidebar").textContent = u.name;
+                    if (u.age) {
+                        document.getElementById("userAgeSidebar").textContent = "Age: " + u.age;
+                        document.getElementById("editAge").value = u.age;
+                    }
+
+                    // PHOTO
+                    if (u.photo) {
+                        const img = document.getElementById("userPhoto");
+                        img.src = "data:image/jpeg;base64," + u.photo;
+                        img.style.display = "block";
+                        document.getElementById("defaultPhoto").style.display = "none";
+                    }
+
+                    loadWorkouts();
+                }
+            } catch (err) {
+                console.error("Session check failed", err);
+                window.location.href = "login.html";
+            }
+        }
+
+        async function logout() {
+            await fetch("logout.php");
+            window.location.href = "index.html";
+        }
+
+        // === WORKOUT CRUD ===
+        const workoutForm = document.getElementById("workoutForm");
+        const workoutList = document.getElementById("workoutList");
+
+        workoutForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const payload = {
+                date: document.getElementById("date").value,
+                exercise_name: document.getElementById("exercise").value,
+                sets: document.getElementById("sets").value,
+                reps: document.getElementById("reps").value,
+                weight: document.getElementById("weight").value
+            };
+            await fetch("api_workouts.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            workoutForm.reset();
+            loadWorkouts();
+        });
+
+        async function loadWorkouts() {
+            const res = await fetch("api_workouts.php");
+            const workouts = await res.json();
+            workoutList.innerHTML = workouts.map(w => `
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <td style="padding:10px;">${w.date}</td>
+                    <td style="padding:10px;">${w.exercise_name}</td>
+                    <td style="padding:10px;">${w.sets}</td>
+                    <td style="padding:10px;">${w.reps}</td>
+                    <td style="padding:10px;">${w.weight}kg</td>
+                    <td style="padding:10px;">
+                        <button onclick="deleteWorkout(${w.id})" style="color:#ff5c5c; background:none; border:none; cursor:pointer;">Delete</button>
+                    </td>
+                </tr>
+            `).join("");
+        }
+
+        async function deleteWorkout(id) {
+            if (!confirm("Delete this workout?")) return;
+            await fetch("api_workouts.php", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            });
+            loadWorkouts();
+        }
+
+        // === PROFILE UPDATE ===
+        const profileForm = document.getElementById("profileForm");
+        profileForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+
+            const age = document.getElementById("editAge").value;
+            if (age) formData.append("age", age);
+
+            const photo = document.getElementById("editPhoto").files[0];
+            if (photo) formData.append("photo", photo);
+
+            try {
+                const res = await fetch("api_update_profile.php", {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("Profile Updated!");
+                    location.reload();
+                } else {
+                    alert("Update failed: " + (data.error || "Unknown"));
+                }
+            } catch (err) {
+                alert("Error: " + err);
+            }
+        });
+
+        checkSession();
+    </script>
+
+</body>
+
+</html>
